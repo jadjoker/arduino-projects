@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "author": "Claude",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-arduino-uno-r4-wifi", "id": "uno", "top": 200, "left": 0, "attrs": {} },
+    {
+      "type": "wokwi-hc-sr04",
+      "id": "hcsr04",
+      "top": 0,
+      "left": 220,
+      "attrs": { "distance": "100" }
+    },
+    {
+      "type": "wokwi-lcd1602",
+      "id": "lcd1",
+      "top": 0,
+      "left": 420,
+      "attrs": { "address": "0x27", "pins": "i2c" }
+    },
+    {
+      "type": "wokwi-rgb-led",
+      "id": "rgb1",
+      "top": 300,
+      "left": 550,
+      "attrs": { "common": "cathode" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "rR",
+      "top": 300,
+      "left": 460,
+      "rotate": 90,
+      "attrs": { "value": "220" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "rG",
+      "top": 330,
+      "left": 460,
+      "rotate": 90,
+      "attrs": { "value": "220" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "rB",
+      "top": 360,
+      "left": 460,
+      "rotate": 90,
+      "attrs": { "value": "220" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "laser_led",
+      "top": 300,
+      "left": 680,
+      "attrs": { "color": "red" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn",
+      "top": 400,
+      "left": 680,
+      "attrs": { "color": "green" }
+    }
+  ],
+  "connections": [
+    [ "uno:5V",   "hcsr04:VCC",  "red",    [] ],
+    [ "uno:GND.1","hcsr04:GND",  "black",  [] ],
+    [ "uno:12",   "hcsr04:TRIG", "purple", [] ],
+    [ "uno:13",   "hcsr04:ECHO", "green",  [] ],
+    [ "uno:5V",   "lcd1:VCC",    "red",    [] ],
+    [ "uno:GND.1","lcd1:GND",    "black",  [] ],
+    [ "uno:A4",   "lcd1:SDA",    "cyan",   [] ],
+    [ "uno:A5",   "lcd1:SCL",    "blue",   [] ],
+    [ "uno:9",  "rR:1",    "red",   [] ],
+    [ "rR:2",   "rgb1:R",  "red",   [] ],
+    [ "uno:10", "rG:1",    "green", [] ],
+    [ "rG:2",   "rgb1:G",  "green", [] ],
+    [ "uno:11", "rB:1",    "blue",  [] ],
+    [ "rB:2",   "rgb1:B",  "blue",  [] ],
+    [ "uno:GND.1", "rgb1:COM", "black", [] ],
+    [ "uno:7",     "laser_led:A", "orange", [] ],
+    [ "uno:GND.1", "laser_led:K", "black",  [] ],
+    [ "uno:2",     "btn:1.l",     "white",  [] ],
+    [ "uno:GND.1", "btn:2.l",     "black",  [] ]
+  ],
+  "dependencies": {}
+}

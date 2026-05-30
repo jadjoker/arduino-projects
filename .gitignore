@@ -1,0 +1,9 @@
+# PlatformIO build output and packages
+.pio/
+
+# Old arduino-cli build output
+build/
+
+# OS
+.DS_Store
+Thumbs.db

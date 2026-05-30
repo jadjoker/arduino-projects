@@ -1,0 +1,4 @@
+# Wokwi Library List
+# See https://docs.wokwi.com/guides/libraries
+# Add one library name per line, e.g.:
+# LiquidCrystal I2C

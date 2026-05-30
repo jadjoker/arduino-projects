@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "author": "GitHub Copilot",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-arduino-uno-r4-wifi", "id": "uno", "top": 200, "left": 0, "attrs": {} },
+    { "type": "wokwi-hc-sr04", "id": "hcsr04", "top": 0, "left": 220, "attrs": { "distance": "50" } },
+    { "type": "wokwi-buzzer", "id": "buzzer", "top": 180, "left": 320, "attrs": {} },
+    { "type": "wokwi-pushbutton", "id": "btn", "top": 360, "left": 220, "attrs": { "color": "green" } },
+    { "type": "wokwi-led", "id": "statusLed", "top": 260, "left": 380, "attrs": { "color": "red" } },
+    { "type": "wokwi-resistor", "id": "ledRes", "top": 260, "left": 340, "rotate": 90, "attrs": { "value": "220" } }
+  ],
+  "connections": [
+    [ "uno:5V", "hcsr04:VCC", "red", [] ],
+    [ "uno:GND.1", "hcsr04:GND", "black", [] ],
+    [ "uno:12", "hcsr04:TRIG", "purple", [] ],
+    [ "uno:13", "hcsr04:ECHO", "green", [] ],
+    [ "uno:8", "buzzer:1", "orange", [] ],
+    [ "uno:GND.1", "buzzer:2", "black", [] ],
+    [ "uno:2", "btn:1.l", "white", [] ],
+    [ "uno:GND.1", "btn:2.l", "black", [] ],
+    [ "uno:9", "ledRes:1", "red", [] ],
+    [ "ledRes:2", "statusLed:A", "red", [] ],
+    [ "uno:GND.1", "statusLed:K", "black", [] ]
+  ],
+  "dependencies": {}
+}
