@@ -1,78 +1,96 @@
 # Homemade Theremin
 
-A simple Arduino theremin-style instrument that uses the HC-SR04 ultrasonic sensor to turn hand distance into musical pitch.
+An Arduino theremin that uses the HC-SR04 ultrasonic sensor to turn hand distance into musical pitch, quantized to a C major scale across 4 octaves.
 
 ## Features
 
-- Hand-controlled pitch with the ultrasonic sensor
-- Passive buzzer plays the tone
-- Push button toggles the theremin on/off
+- Hand-controlled pitch snapped to C major scale (C3–B6, 28 notes)
+- Audio amplifier + speaker for rich sound (passive buzzer in simulation)
+- I2C LCD shows current note name and frequency in real-time
+- Push button toggles theremin on/off
 - Status LED shows when sound is enabled
 
-## Parts used
+## Parts
 
-- Arduino UNO R4 WiFi
-- HC-SR04 ultrasonic sensor
-- Passive buzzer
-- Push button
-- LED
-- 220 Ω resistor
-- Breadboard
-- Jumper wires
+| Component | Qty |
+|-----------|-----|
+| Arduino UNO R4 WiFi | 1 |
+| HC-SR04 ultrasonic sensor | 1 |
+| Audio power amplifier module | 1 |
+| Speaker (8Ω passive) | 1 |
+| I2C LCD 1602 | 1 |
+| Push button | 1 |
+| Red LED | 1 |
+| 220 Ω resistor | 1 |
+| Breadboard + jumper wires | — |
 
 ## Wiring
 
-| Component | Arduino Pin |
-|-----------|-------------|
-| HC-SR04 VCC | 5V |
-| HC-SR04 GND | GND |
-| HC-SR04 TRIG | D12 |
-| HC-SR04 ECHO | D13 |
-| Buzzer + | D8 |
-| Buzzer - | GND |
-| Push button | D2 |
-| Push button other leg | GND |
-| LED + (through 220 Ω resistor) | D9 |
+### HC-SR04
+| HC-SR04 | Arduino |
+|---------|---------|
+| VCC | 5V |
+| GND | GND |
+| TRIG | D12 |
+| ECHO | D13 |
+
+### Audio amp + speaker
+| Amp pin | Connects to |
+|---------|-------------|
+| VCC | 5V |
+| GND | GND |
+| IN (signal) | D8 |
+| OUT+ / OUT- | Speaker terminals |
+
+### I2C LCD 1602
+| LCD | Arduino |
+|-----|---------|
+| VCC | 5V |
+| GND | GND |
+| SDA | A4 |
+| SCL | A5 |
+
+### Button & LED
+| Component | Arduino |
+|-----------|---------|
+| Button leg 1 | D2 |
+| Button leg 2 | GND |
+| LED + (via 220 Ω) | D9 |
 | LED - | GND |
 
-## Software Setup
-
-No external libraries required.
-
-### Install PlatformIO
+## Software setup
 
 Install the [PlatformIO IDE extension](https://platformio.org/install/ide?install=vscode) for VS Code.
 
-### Compile & Upload
+This project has two build environments:
 
-```powershell
-# Build
-pio run
+| Environment | Purpose |
+|-------------|---------|
+| `sim` | Classic Uno — builds firmware for Wokwi simulation |
+| `uno_r4_wifi` | R4 WiFi — builds firmware for real hardware upload |
 
-# Upload (PlatformIO auto-detects the port, or set upload_port in platformio.ini)
-pio run --target upload
-```
-
-## Simulation (Wokwi)
-
-1. Open the project folder in VS Code.
-2. Press **Ctrl+Shift+B** to build.
-3. Open `diagram.json` and click **Start Simulator**.
-4. Move your hand over the HC-SR04 sensor in the simulator to change pitch.
+Use **Terminal → Run Task** to choose:
+- **Build: Simulate (Uno)** — build for Wokwi, then press play in diagram.json
+- **Build: Upload (R4 WiFi)** — build and flash to the real board over USB
+- **Build: Both** — build both environments
 
 ## How it works
 
-- The ultrasonic sensor measures hand distance.
-- Distance is mapped to a musical frequency between about 220 Hz and 880 Hz.
-- The passive buzzer plays the tone while the project is enabled.
-- Press the button to toggle sound on or off.
+1. The HC-SR04 measures hand distance (5–100 cm).
+2. Distance maps to one of 28 notes in the C major scale (C3–B6), so each note zone is ~3.5 cm wide.
+3. The amp drives the speaker with the tone signal from D8.
+4. The LCD displays the note name and frequency as you move your hand.
+5. Press the button to toggle sound on or off.
 
 ## Test cases
 
-| Action | Expected behavior |
-|--------|-------------------|
-| Press button once | LED turns on, theremin becomes active |
-| Move hand closer | Pitch rises |
-| Move hand farther | Pitch falls |
-| Press button again | Sound stops, LED turns off |
-| No hand detected | No tone plays |
+| Action | Expected |
+|--------|----------|
+| Power on | LCD shows "Theremin Ready / Press btn to play" |
+| Press button | LED turns on, LCD shows "Theremin OFF → active" |
+| Hand at ~5 cm | High note (B6, ~1976 Hz) |
+| Hand at ~50 cm | Mid note (~D4, ~294 Hz) |
+| Hand at ~100 cm | Low note (C3, 131 Hz) |
+| Move hand slowly | LCD updates note name and Hz in real-time |
+| Remove hand entirely | Tone stops, LCD shows "Move hand..." |
+| Press button again | Sound stops, LED off, LCD shows "Theremin OFF" |
