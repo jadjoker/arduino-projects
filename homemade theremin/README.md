@@ -1,12 +1,44 @@
 # Homemade Theremin
 
-An Arduino theremin that uses the HC-SR04 ultrasonic sensor to turn hand distance into musical pitch, quantized to a C major scale across 4 octaves.
+An Arduino theremin that uses the HC-SR04 ultrasonic sensor to turn hand distance into musical pitch, quantized to a musical scale so you can play real songs.
+
+## How to play
+
+1. **Power on** — the LCD shows "Theremin Ready".
+2. **Press the green button** to turn sound on. The red LED lights up.
+3. **Hold your hand above the sensor** — move it closer for higher notes, further away for lower notes. The range is 5 cm (highest) to 100 cm (lowest).
+4. **Watch the LCD** — it shows the current note name and frequency on line 1, and the active scale on line 2.
+5. **Watch the LED strip** — warm red colours mean low notes; cool blue colours mean high notes. More LEDs lit = higher pitch.
+6. **Press the button again** to turn sound off.
+
+### Choosing a scale
+
+Press a number key on the keypad to switch scales mid-song:
+
+| Key | Scale | Best for |
+|-----|-------|----------|
+| 1 | C Major | Pop, folk, classical melodies |
+| 2 | Pentatonic | Any melody — very forgiving, hard to sound wrong |
+| 3 | Blues | Blues, rock, soulful improvisation |
+| 4 | Natural Minor | Sad or dramatic melodies |
+| 5 | Chromatic | Full range — every semitone, hardest to play in tune |
+
+The LCD will briefly show the scale name when you switch, then return to showing the current note.
+
+### Tips for playing songs
+
+- Start with **Pentatonic (key 2)** — every note sounds good together so mistakes don't stand out.
+- Move your hand **slowly and deliberately** — each note zone is about 3–4 cm wide.
+- Use the LCD note name to find your position for a song, then memorise the rough distances.
+- **C Major (key 1)** is best for well-known melodies like Happy Birthday, Twinkle Twinkle, and Ode to Joy.
 
 ## Features
 
-- Hand-controlled pitch snapped to C major scale (C3–B6, 28 notes)
+- 5 selectable scales via keypad (C Major, Pentatonic, Blues, Natural Minor, Chromatic)
+- Hand-controlled pitch quantized to scale notes (no out-of-tune sliding)
 - Audio amplifier + speaker for rich sound (passive buzzer in simulation)
-- I2C LCD shows current note name and frequency in real-time
+- WS2812 LED strip — colour and count show pitch in real-time
+- I2C LCD shows current note name, frequency, and active scale
 - Push button toggles theremin on/off
 - Status LED shows when sound is enabled
 
@@ -19,6 +51,8 @@ An Arduino theremin that uses the HC-SR04 ultrasonic sensor to turn hand distanc
 | Audio power amplifier module | 1 |
 | Speaker (8Ω passive) | 1 |
 | I2C LCD 1602 | 1 |
+| WS2812 RGB LED strip | 1 |
+| 4×4 membrane keypad | 1 |
 | Push button | 1 |
 | Red LED | 1 |
 | 220 Ω resistor | 1 |
@@ -50,6 +84,25 @@ An Arduino theremin that uses the HC-SR04 ultrasonic sensor to turn hand distanc
 | SDA | A4 |
 | SCL | A5 |
 
+### WS2812 LED strip
+| Strip | Arduino |
+|-------|---------|
+| VCC | 5V |
+| GND | GND |
+| DIN | D6 |
+
+### 4×4 Keypad
+| Keypad | Arduino |
+|--------|---------|
+| R1 | D3 |
+| R2 | D4 |
+| R3 | D5 |
+| R4 | D7 |
+| C1 | D10 |
+| C2 | D11 |
+| C3 | A0 |
+| C4 | A1 |
+
 ### Button & LED
 | Component | Arduino |
 |-----------|---------|
@@ -77,10 +130,12 @@ Use **Terminal → Run Task** to choose:
 ## How it works
 
 1. The HC-SR04 measures hand distance (5–100 cm).
-2. Distance maps to one of 28 notes in the C major scale (C3–B6), so each note zone is ~3.5 cm wide.
+2. Distance maps to a note in the selected scale — each note zone is roughly 3–5 cm wide depending on scale.
 3. The amp drives the speaker with the tone signal from D8.
-4. The LCD displays the note name and frequency as you move your hand.
-5. Press the button to toggle sound on or off.
+4. The WS2812 strip lights up proportionally to pitch, shifting from red (low) to blue (high).
+5. The LCD shows the note name, frequency, and current scale name.
+6. The keypad switches between 5 scales without interrupting play.
+7. Press the button to toggle sound on or off.
 
 ## Test cases
 
